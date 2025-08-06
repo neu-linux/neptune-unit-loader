@@ -1,0 +1,14 @@
+[package]
+name = "engine-units"
+description = "The units parser & loader for Neuengine."
+authors = ["Kaguya <kaguya@neulinux.com>"]
+
+version = "1.0.0"
+edition = "2024"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.9.5"
+petgraph = "0.8.2"
+strum = "0.27.2"
+strum_macros = "0.27.2"
