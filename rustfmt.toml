@@ -2,7 +2,6 @@ hard_tabs = false       # good
 tab_spaces = 4          # idiomatic default
 max_width = 100         # more readable, more common in modern Rust
 use_small_heuristics = "Max"  # consistent block formatting
-trailing_comma = "Always"      # improves diffs
 group_imports = "StdExternalCrate"
 imports_granularity = "Preserve"
 wrap_comments = true
