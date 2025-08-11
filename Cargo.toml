@@ -1,5 +1,5 @@
 [package]
-name = "engine-units"
+name = "neptune-unit-loader"
 description = "The units parser & loader for Neuengine."
 authors = ["Kaguya <kaguya@neulinux.com>"]
 
