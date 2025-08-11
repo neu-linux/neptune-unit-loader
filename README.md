@@ -1,3 +1,3 @@
-This is the repository for engine-units, the crate for loading Neuengine units.
+# neptune-unit-loader
 
-Meant for internal use only.
+This repository hosts the crate for Neptune's unit parser and loader.
