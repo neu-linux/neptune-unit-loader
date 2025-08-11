@@ -140,29 +140,54 @@ fn build_dependency_graph(units: &[UnitFile],) -> Graph<String, (), Directed,> {
 }
 
 fn generate_unit_list(
-    graph: &Graph<String, (), Directed,>,
-) -> Result<Vec<String,>, GraphBuildError,> {
-    let sorted_nodes = toposort(graph, None,).map_err(|cycle| {
-        let node_id = cycle.node_id();
-        let node_name = graph
-            .node_weight(node_id,)
-            .map(ToString::to_string,)
-            .unwrap_or_else(|| "<unknown>".into(),);
-        GraphBuildError::DependencyCycle(node_name,)
-    },)?;
+    units: &[UnitFile],
+) -> Result<Vec<UnitFile>, GraphBuildError> {
+    let mut graph = Graph::<usize, (), Directed>::new();
+    let mut idx_map = HashMap::new();
 
-    let unit_names =
-        sorted_nodes.into_iter().filter_map(|idx| graph.node_weight(idx,).cloned(),).collect();
+    for (i, unit) in units.iter().enumerate() {
+        let node_idx = graph.add_node(i);
+        idx_map.insert(unit.unit.unit_name.clone(), node_idx);
+    }
 
-    Ok(unit_names,)
+    for (i, unit) in units.iter().enumerate() {
+        let from = *idx_map.get(&unit.unit.unit_name).unwrap();
+
+        for dep in &unit.dependency.needs_before {
+            if let Some(&to) = idx_map.get(dep) {
+                graph.add_edge(from, to, ());
+            } else {
+                logwarn!("{} depends on missing unit '{}'", unit.unit.unit_name, dep);
+            }
+        }
+        for dep in &unit.dependency.needs_after {
+            if let Some(&to) = idx_map.get(dep) {
+                graph.add_edge(to, from, ());
+            } else {
+                logwarn!("{} depends on missing unit '{}'", unit.unit.unit_name, dep);
+            }
+        }
+    }
+    
+    let sorted = toposort(&graph, None).map_err(|cycle| {
+        let node = cycle.node_id();
+        let name = units[graph[node]].unit.unit_name.clone();
+        GraphBuildError::DependencyCycle(name)
+    })?;
+
+    let ordered_units = sorted
+        .into_iter()
+        .map(|node_idx| units[graph[node_idx]].clone())
+        .collect();
+
+    Ok(ordered_units)
 }
 
-pub fn generate(units: &[UnitFile],) -> Result<Vec<String,>, GraphBuildError,> {
-    let dependency_graph = build_dependency_graph(units,);
-    generate_unit_list(&dependency_graph,)
+pub fn generate(units: &[UnitFile]) -> Result<Vec<UnitFile>, GraphBuildError> {
+    generate_unit_list(units)
 }
 
-pub fn load_and_generate(path: &str,) -> Result<Vec<String,>, GraphBuildError,> {
-    let loaded_units = load_units(path,)?;
-    generate(&loaded_units,)
+pub fn load_and_generate(path: &str) -> Result<Vec<UnitFile>, GraphBuildError> {
+    let loaded_units = load_units(path)?;
+    generate(&loaded_units)
 }

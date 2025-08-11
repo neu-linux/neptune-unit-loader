@@ -11,7 +11,7 @@ pub enum UnitType {
     Target,
 }
 
-#[derive(Debug, Deserialize,)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct UnitSection {
     #[serde(rename = "name")]
     pub unit_name: String,
@@ -21,14 +21,14 @@ pub struct UnitSection {
     pub unit_type: UnitType,
 }
 
-#[derive(Debug, Deserialize,)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct TodoSection {
     pub path: String,
     pub args: Vec<String,>,
     pub env: HashMap<String, String,>,
 }
 
-#[derive(Debug, Deserialize,)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct ServiceSection {
     #[serde(rename = "restart")]
     pub command_on_restart: Option<String,>,
@@ -37,13 +37,13 @@ pub struct ServiceSection {
     pub command_on_stop: Option<String,>,
 }
 
-#[derive(Debug, Deserialize,)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct TargetSection {
     #[serde(rename = "once")]
     pub is_runnable_once: bool,
 }
 
-#[derive(Debug, Deserialize, Default,)]
+#[derive(Debug, Deserialize, Default, Clone)]
 pub struct DependencySection {
     #[serde(rename = "before", default)]
     pub needs_before: Vec<String,>,
@@ -52,7 +52,7 @@ pub struct DependencySection {
     pub needs_after: Vec<String,>,
 }
 
-#[derive(Debug, Deserialize,)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct UnitFile {
     pub unit: UnitSection,
     pub todo: TodoSection,
