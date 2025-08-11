@@ -150,7 +150,7 @@ fn generate_unit_list(
         idx_map.insert(unit.unit.unit_name.clone(), node_idx);
     }
 
-    for (i, unit) in units.iter().enumerate() {
+    for unit in units {
         let from = *idx_map.get(&unit.unit.unit_name).unwrap();
 
         for dep in &unit.dependency.needs_before {
