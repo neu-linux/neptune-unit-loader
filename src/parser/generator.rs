@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use petgraph::algo::toposort;
 use petgraph::{Directed, Graph};
 
-use crate::parser::loader::load_units;
 use crate::unit::errors::{GraphBuildError, UnitLoadError};
 use crate::unit::types::UnitFile;
 
@@ -50,13 +49,4 @@ pub fn generate_unit_list(units: &[UnitFile]) -> Result<Vec<UnitFile>, GraphBuil
     let ordered_units = sorted.into_iter().map(|node_idx| units[graph[node_idx]].clone()).collect();
 
     Ok(ordered_units)
-}
-
-pub fn generate(units: &[UnitFile]) -> Result<Vec<UnitFile>, GraphBuildError> {
-    generate_unit_list(units)
-}
-
-pub fn load_and_generate(path: &str) -> Result<Vec<UnitFile>, GraphBuildError> {
-    let loaded_units = load_units(path)?;
-    generate(&loaded_units)
 }

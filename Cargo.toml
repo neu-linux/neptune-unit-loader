@@ -1,5 +1,5 @@
 [package]
-name = "neptune-unit-loader"
+name = "neptune-units"
 description = "The units parser & loader for Neuengine."
 authors = ["Kaguya <kaguya@neulinux.com>"]
 
@@ -12,5 +12,5 @@ toml = "0.9.5"
 petgraph = "0.8.2"
 strum = "0.27.2"
 strum_macros = "0.27.2"
-thiserror = "2.0.12"
+thiserror = "2.0.14"
 log = "0.4.27"
